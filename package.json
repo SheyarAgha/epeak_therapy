@@ -1,0 +1,24 @@
+{
+  "name": "epeak_therapy",
+  "version": "1.0.0",
+  "description": "cs340 project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SheyarAgha/epeak_therapy.git"
+  },
+  "author": "Sheyar Abdullah & Maricon Valdez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SheyarAgha/epeak_therapy/issues"
+  },
+  "homepage": "https://github.com/SheyarAgha/epeak_therapy#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "forever": "^4.0.3",
+    "mysql": "^2.18.1"
+  }
+}

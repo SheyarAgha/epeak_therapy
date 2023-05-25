@@ -2,9 +2,11 @@
   "name": "epeak_therapy",
   "version": "1.0.0",
   "description": "cs340 project",
-  "main": "app.js",
+  "main": "controller.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/forever/bin/forever start controller.js",
+    "stop": "./node_modules/forever/bin/forever stop controller.js"
   },
   "repository": {
     "type": "git",

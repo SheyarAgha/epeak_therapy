@@ -5,7 +5,7 @@ function Home() {
 
     return (
         <>
-            <h2>Home</h2>
+            <h4>Navigate to desired table to add, update, or delete data</h4>
         </>
     );
 }

@@ -6,7 +6,7 @@ function Navigation() {
         <nav className="App-nav">
             <Link className="Link" to="/">Home</Link>
             <span>&nbsp;&nbsp;</span>
-            <Link className="Link" to="/patient">Patients</Link>
+            <Link className="Link" to="/patients">Patients</Link>
             <span>&nbsp;&nbsp;</span>
             <Link className="Link" to="/therapists">Therapists</Link>
             <span>&nbsp;&nbsp;</span>

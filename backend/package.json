@@ -5,6 +5,7 @@
   "main": "controller.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev_start": "nodemon controller.js",
     "start": "./node_modules/forever/bin/forever start controller.js",
     "stop": "./node_modules/forever/bin/forever stop controller.js"
   },
@@ -19,8 +20,11 @@
   },
   "homepage": "https://github.com/SheyarAgha/epeak_therapy#readme",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "forever": "^4.0.3",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.22"
   }
 }

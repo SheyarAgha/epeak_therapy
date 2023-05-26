@@ -5,7 +5,6 @@ function Table({ data }) {
     return (
         <table className="table">
             <thead>
-                {}
             </thead>
             <tbody>
                 {data.map((datarow) => <TableRow datarow={datarow} />)}

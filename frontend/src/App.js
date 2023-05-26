@@ -1,3 +1,9 @@
+// Citation for some bits and peices of code throughout:
+// Date: 05/26/2023
+// Adapted from and Based on previous work done by Sheyar Abdullah (self)
+//    in CS290
+// Source URL: https://github.com/SheyarAgha/Full-Stack-MERN-App
+
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';

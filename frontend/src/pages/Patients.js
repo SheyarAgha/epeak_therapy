@@ -34,7 +34,7 @@ function Patients() {
                 'Content-Type': 'application/json',
             },
         });
-        if (response.status === 201) {
+        if (response.status === 202) {
             alert("Successfully updated the patient record");
         } else {
             alert("Failed to update the patient record");

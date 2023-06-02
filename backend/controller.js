@@ -17,10 +17,11 @@ var db = require('./database/db-connector');
 */
 
 app.get("/patients", (req, res) => {
-    db.pool.query('SELECT * FROM patients', function (err, results) {
-        res.status(200).send(results);
+    db.pool.query('SELECT * FROM patients', (err, result, fields) => {
+        res.status(200).send(result);
     });
 });
+
 
 //create a patient
 app.post('/patients', (req, res) => {
@@ -30,30 +31,21 @@ app.post('/patients', (req, res) => {
     const genderInput = req.body.gender;
     const emailInput = req.body.email;
     const phone_numberInput = req.body.num;
+
     db.pool.query(
         'INSERT INTO patients (pt_name, date_of_birth, gender, email, phone_number) VALUES (?, ?, ?, ?, ?)',
-        [pt_nameInput, date_of_birthInput, genderInput, emailInput, phone_numberInput]
-    )
-        .then((results) => {
-            res.status(200).send('Patient created successfully');
-        })
-        .catch((error) => {
-            console.error('Error creating patient', error);
-            res.status(500).send('Error creating patient');
-        });
+        [pt_nameInput, date_of_birthInput, genderInput, emailInput, phone_numberInput],
+        (error, result, fields) => {
+            if (error) {
+                console.error('Error inserting data: ', error);
+                res.status(500).send('Error inserting data');
+            } else {
+                res.status(201).send();
+            }
+        }
+    );
 });
-//         ,
-//         (error, results) => {
-//             if (error) {
-//                 console.error('Error inserting data: ', error);
-//                 res.status(500).send('Error inserting data');
-//                 return;
-//             }
 
-//             res.status(201).send();
-//         }
-//     );
-// });
 
 //update a patient
 app.put('/patients/:pt_name', (req, res) => {
@@ -67,28 +59,18 @@ app.put('/patients/:pt_name', (req, res) => {
 
     db.pool.query(
         'UPDATE patients SET date_of_birth = ?, gender = ?, email = ?, phone_number = ? WHERE pt_name = ?',
-        [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name]
-    )
-        .then((results) => {
-            res.status(200).send('patient updated successfully');
-        })
-        .catch((error) => {
-            console.error('Error updating patient', error);
-            res.status(500).send('Error updating patient');
-        });
+        [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name],
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error updating data: ', error);
+                res.status(500).send('Error updating data');
+            } else {
+                res.status(202).send();
+            }
+        }
+    );
 });
-//         ,
-//         (error, results) => {
-//             if (error) {
-//                 console.error('Error updating data: ', error);
-//                 res.status(500).send('Error updating data');
-//                 return;
-//             }
 
-//             res.status(201).send();
-//         }
-//     );
-// });
 
 //delete a patient
 app.delete('/patients/:pt_id', (req, res) => {
@@ -98,28 +80,18 @@ app.delete('/patients/:pt_id', (req, res) => {
 
     db.pool.query(
         'DELETE FROM patients WHERE pt_id = ?',
-        [pt_id]
-    )
-        .then((results) => {
-            res.status(200).send('patient deleted successfully');
-        })
-        .catch((error) => {
-            console.error('Error deleting patient', error);
-            res.status(500).send('Error deleting patient');
-        });
+        [pt_id],
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error deleting data: ', error);
+                res.status(500).send('Error deleting data');
+                return;
+            } else {
+                res.status(204).send();
+            }
+        }
+    );
 });
-//         ,
-//         (error, results) => {
-//             if (error) {
-//                 console.error('Error deleting data: ', error);
-//                 res.status(500).send('Error deleting data');
-//                 return;
-//             }
-
-//             res.status(204).send();
-//         }
-//     );
-// });
 
 
 

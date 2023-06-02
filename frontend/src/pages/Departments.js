@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TableRow from "../components/TableRow";
 
 
 function Departments() {
 
     const [data, setData] = useState([]);
-    const [location, setLocation] = useState([]);
-    const [recordToEdit, setRecordToEdit] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState("");
+    const [departmentLocation, setDepartmentLocation] = useState("");
     const navigate = useNavigate();
 
     const onDelete = async record => {
@@ -21,26 +21,30 @@ function Departments() {
     }
 
     const onEdit = async record => {
-        console.log(record)
-        setRecordToEdit(record);
-        // navigate(`/department_location/${record.dept_name}`);
-    }
+        setSelectedDepartment(record.dept_name);
+    };
 
     const updateRecord = async () => {
+        const departmentId = data.find(
+            (record) => record.dept_name === selectedDepartment
+        ).dept_id;
+
+        const updatedRecord = {
+            dept_id: departmentId,
+            dept_location: departmentLocation,
+        };
+
         const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/departments/${recordToEdit.dept_id}`, {
             method: 'PUT',
-            body: JSON.stringify({
-                dept_name: recordToEdit.dept_name,
-                dept_locationInput: recordToEdit.dept_location
-            }),
+            body: JSON.stringify(updatedRecord),
             headers: {
                 'Content-Type': 'application/json',
             },
         });
         if (response.status === 201) {
-            alert("Successfully edited the exercise");
+            alert("Successfully edited the dept");
         } else {
-            alert("Failed to edited the exercise");
+            alert("Failed to edit dept");
         }
         navigate("/");
     }
@@ -69,19 +73,30 @@ function Departments() {
                         datarow={record}
                         record={record}
                         onEdit={onEdit}
+                        key={record.dept_id}
                     />)}
                 </tbody>
             </table>
             <div>
                 <h2>Edit a Department</h2>
+                <select
+                    value={selectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                >
+                    <option value="">Select Department</option>
+                    {data.map((record) => (
+                        <option value={record.dept_name} key={record.dept_id}>
+                            {record.dept_name}
+                        </option>
+                    ))}
+                </select>
                 <input
                     type="text"
                     placeholder="Enter location"
-                    value={location}
-                    onChange={e => setLocation(e.target.value)} />
+                    value={departmentLocation}
+                    onChange={e => setDepartmentLocation(e.target.value)} />
                 <button
-                    onClick={updateRecord}
-                >Edit department location</button>
+                    onClick={updateRecord}>Edit department location</button>
             </div>
         </>
     );

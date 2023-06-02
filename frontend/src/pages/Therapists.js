@@ -35,6 +35,20 @@ function Therapists() {
         setData(data);
     }
 
+    const fetchDepartments = async () => {
+        try {
+            const response = await fetch('/departments');
+            if (response.ok) {
+                const data = await response.json();
+                setDepartments(data.departments);
+            } else {
+                console.error('Failed to fetch departments');
+            }
+        } catch (error) {
+            console.error('Error fetching departments', error);
+        }
+    };
+
     const [name, setName] = useState('');
     const [department, setDepartment] = useState('');
 
@@ -57,6 +71,7 @@ function Therapists() {
 
     useEffect(() => {
         loadTherapists();
+        fetchDepartments();
     }, []);
 
     return (
@@ -86,9 +101,11 @@ function Therapists() {
                     onChange={e => setName(e.target.value)} />
                 <select value={department} onChange={e => setDepartment(e.target.value)}>
                     <option value=''>Select Department</option>
-                    <option value='1'>Physical Therapy</option>
-                    <option value='2'>Occupational Therapy</option>
-                    <option value='3'>Speech Therapy</option>
+                    {departments.map((dept) => (
+                        <option key={dept.dept_id} value={dept.dept_id}>
+                            {dept.department_name}
+                        </option>
+                    ))}
                 </select>
                 <button
                     onClick={addRecord}

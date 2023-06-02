@@ -6,6 +6,9 @@ import TableRow from "../components/TableRow";
 function Therapists() {
 
     const [data, setData] = useState([]);
+    const [name, setName] = useState('');
+    const [department, setDepartment] = useState('');
+    const [departments, setDepartments] = useState([]);
 
     const navigate = useNavigate();
 
@@ -18,6 +21,9 @@ function Therapists() {
     //     console.error('Failed');
     // }
     // }
+
+    const onEdit = async record => {
+    };
 
     const onDelete = async record => {
         const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/therapists/${record.therapist_id}`,
@@ -36,21 +42,10 @@ function Therapists() {
     }
 
     const fetchDepartments = async () => {
-        try {
-            const response = await fetch('/departments');
-            if (response.ok) {
-                const data = await response.json();
-                setDepartments(data.departments);
-            } else {
-                console.error('Failed to fetch departments');
-            }
-        } catch (error) {
-            console.error('Error fetching departments', error);
-        }
+        const response = await fetch('http://flip2.engr.oregonstate.edu:6573/departments');
+        const departments = await response.json();
+        setDepartments(departments);
     };
-
-    const [name, setName] = useState('');
-    const [department, setDepartment] = useState('');
 
     const addRecord = async () => {
         const newRecord = { name, department };
@@ -70,8 +65,8 @@ function Therapists() {
     };
 
     useEffect(() => {
-        loadTherapists();
         fetchDepartments();
+        loadTherapists();
     }, []);
 
     return (
@@ -88,7 +83,7 @@ function Therapists() {
                         datarow={record}
                         record={record}
                         onDelete={onDelete}
-                    //    onEdit={onEdit} 
+                        onEdit={onEdit}
                     />)}
                 </tbody>
             </table>
@@ -103,7 +98,7 @@ function Therapists() {
                     <option value=''>Select Department</option>
                     {departments.map((dept) => (
                         <option key={dept.dept_id} value={dept.dept_id}>
-                            {dept.department_name}
+                            {dept.dept_name}
                         </option>
                     ))}
                 </select>

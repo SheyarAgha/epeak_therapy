@@ -104,32 +104,22 @@ app.get('/therapists', (req, res) => {
 
 //create a therapist
 app.post('/therapists', (req, res) => {
-    const { therapist_nameInput, dept_id_from_dropdown } = req.body;
+    const therapist_nameInput = req.body.name;
+    const dept_id_from_dropdown = req.body.department;
 
     db.pool.query(
         'INSERT INTO therapists (therapist_name, dept_id) VALUES (?, (SELECT dept_id FROM departments WHERE dept_id = ?))',
-        [therapist_nameInput, dept_id_from_dropdown]
-    )
-        .then((results) => {
-            res.status(200).send('therapist created successfully');
-        })
-        .catch((error) => {
-            console.error('Error creating therapist', error);
-            res.status(500).send('Error creating therapist');
-        });
+        [therapist_nameInput, dept_id_from_dropdown],
+        (error, result, fields) => {
+            if (error) {
+                console.error('Error creating therapist: ', error);
+                res.status(500).send('Error creating therapist');
+            } else {
+                res.status(201).send('Therapist created successfully');
+            }
+        }
+    );
 });
-//         ,
-//         (error, results) => {
-//             if (error) {
-//                 console.error('Error creating therapist: ', error);
-//                 res.status(500).send('Error creating therapist');
-//                 return;
-//             }
-
-//             res.status(200).send('Therapist created successfully');
-//         }
-//     );
-// });
 
 //update a therapist
 app.put('/therapists/:therapist_name', (req, res) => {
@@ -341,35 +331,25 @@ app.get('/departments', (req, res) => {
         res.status(200).send(results);
     });
 });
+
 //update a department
 app.put('/departments/:dept_id', (req, res) => {
-    const { dept_id } = req.params;
-    const { dept_name, dept_locationInput } = req.body;
+    const dept_id = req.body.dept_id;
+    const dept_locationInput = req.body.dept_location;
 
     db.pool.query(
-        'UPDATE departments SET dept_location = ? WHERE dept_id = (SELECT dept_id FROM departments WHERE dept_name = ?)',
-        [dept_locationInput, dept_id]
-    )
-        .then((results) => {
-            res.status(200).send('Department updated successfully');
-        })
-        .catch((error) => {
-            console.error('Error updating department', error);
-            res.status(500).send('Error updating department');
-        });
+        'UPDATE departments SET dept_location = ? WHERE dept_id = ?',
+        [dept_locationInput, dept_id],
+        (error, result, fields) => {
+            if (error) {
+                console.error('Error updating department: ', error);
+                res.status(500).send('Error updating department');
+            } else {
+                res.status(202).send('Department updated successfully');
+            }
+        }
+    );
 });
-//         ,
-//         (error, results) => {
-//             if (error) {
-//                 console.error('Error updating department: ', error);
-//                 res.status(500).send('Error updating department');
-//                 return;
-//             }
-
-//             res.status(200).send('Department updated successfully');
-//         }
-//     );
-// });
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);

@@ -21,7 +21,7 @@ function Departments() {
     }
 
     const onEdit = async record => {
-        setSelectedDepartment(record.dept_name);
+        // setSelectedDepartment(record.dept_name);
     };
 
     const updateRecord = async () => {
@@ -34,14 +34,14 @@ function Departments() {
             dept_location: departmentLocation,
         };
 
-        const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/departments/${recordToEdit.dept_id}`, {
+        const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/departments/${updatedRecord.dept_id}`, {
             method: 'PUT',
             body: JSON.stringify(updatedRecord),
             headers: {
                 'Content-Type': 'application/json',
             },
         });
-        if (response.status === 201) {
+        if (response.status === 202) {
             alert("Successfully edited the dept");
         } else {
             alert("Failed to edit dept");

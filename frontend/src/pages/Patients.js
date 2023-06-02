@@ -79,7 +79,7 @@ function Patients() {
 
     useEffect(() => {
         loadPatients();
-    }, [data]);
+    }, []);
 
     return (
         <>

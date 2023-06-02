@@ -374,7 +374,7 @@ app.put('/departments/:dept_id', (req, res) => {
 
     db.pool.query(
         'UPDATE departments SET dept_location = ? WHERE dept_id = (SELECT dept_id FROM departments WHERE dept_name = ?)',
-        [dept_locationInput, dept_name]
+        [dept_locationInput, dept_id]
     )
         .then((results) => {
             res.status(200).send('Department updated successfully');

@@ -40,7 +40,7 @@ app.post('/patients', (req, res) => {
                 console.error('Error inserting data: ', error);
                 res.status(500).send('Error inserting data');
             } else {
-                res.status(201).send();
+                res.status(201).send(result);
             }
         }
     );
@@ -48,24 +48,24 @@ app.post('/patients', (req, res) => {
 
 
 //update a patient
-app.put('/patients/:pt_name', (req, res) => {
+app.put('/patients', (req, res) => {
     // const { pt_name } = req.params;
     // const { date_of_birthInput, genderInput, emailInput } = req.body;
-    const pt_name = req.body.name;
-    const date_of_birthInput = req.body.date;
-    const genderInput = req.body.gender;
-    const emailInput = req.body.email;
-    const phone_numberInput = req.body.num;
+    const pt_name = req.body.editname;
+    const date_of_birthInput = req.body.editdate;
+    const genderInput = req.body.editgender;
+    const emailInput = req.body.editemail;
+    const phone_numberInput = req.body.editnum;
 
     db.pool.query(
         'UPDATE patients SET date_of_birth = ?, gender = ?, email = ?, phone_number = ? WHERE pt_name = ?',
         [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name],
-        (error, results, fields) => {
+        (error, result, fields) => {
             if (error) {
                 console.error('Error updating data: ', error);
                 res.status(500).send('Error updating data');
             } else {
-                res.status(202).send();
+                res.status(202).send(result);
             }
         }
     );
@@ -81,7 +81,7 @@ app.delete('/patients/:pt_id', (req, res) => {
     db.pool.query(
         'DELETE FROM patients WHERE pt_id = ?',
         [pt_id],
-        (error, results, fields) => {
+        (error, result, fields) => {
             if (error) {
                 console.error('Error deleting data: ', error);
                 res.status(500).send('Error deleting data');
@@ -96,10 +96,12 @@ app.delete('/patients/:pt_id', (req, res) => {
 
 
 app.get('/therapists', (req, res) => {
-    db.pool.query('SELECT * FROM therapists', function (err, results, fields) {
-        res.status(200).send(results);
+    db.pool.query('SELECT * FROM therapists', function (err, result, fields) {
+        res.status(200).send(result);
     });
 });
+
+
 //create a therapist
 app.post('/therapists', (req, res) => {
     const { therapist_nameInput, dept_id_from_dropdown } = req.body;

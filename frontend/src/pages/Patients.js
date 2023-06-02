@@ -26,7 +26,7 @@ function Patients() {
     }
 
     const onEdit = async record => {
-        const editedRecord = { name, date, gender, email, num };
+        const editedRecord = { editname, editdate, editgender, editemail, editnum };
         const response = await fetch("http://flip2.engr.oregonstate.edu:6573/patients", {
             method: 'PUT',
             body: JSON.stringify(editedRecord),
@@ -79,7 +79,7 @@ function Patients() {
 
     useEffect(() => {
         loadPatients();
-    }, []);
+    }, [data]);
 
     return (
         <>
@@ -160,7 +160,7 @@ function Patients() {
                     onChange={e => editNum(e.target.value)} />
                 <button
                     onClick={onEdit}
-                >Edit Patient</button>
+                >Update Patient</button>
             </div>
         </>
     );

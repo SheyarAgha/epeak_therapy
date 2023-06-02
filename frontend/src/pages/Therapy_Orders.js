@@ -47,10 +47,10 @@ function TherapyOrders() {
                     <th>Completed?</th>
                 </thead>
                 <tbody>
-                {data.map((record) => <TableRow
-                    datarow={record}
-                    record={record}
-                    onEdit={onEdit} />)}
+                    {data.map((record) => <TableRow
+                        datarow={record}
+                        record={record}
+                        onEdit={onEdit} />)}
                 </tbody>
             </table>
         </>

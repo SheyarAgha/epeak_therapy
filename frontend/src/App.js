@@ -25,12 +25,12 @@ function App() {
         <Router>
           <Navigation />
           <Routes>
-            <Route path="/" element={<Home/>}></Route>
-            <Route path="/patients" element={<Patients/>}></Route>
-            <Route path="/therapists" element={<Therapists/>}></Route>
-            <Route path="/therapy_orders" element={<Therapy_Orders/>}></Route>
-            <Route path="/therapy_sessions" element={<Therapy_Sessions/>}></Route>
-            <Route path="/departments" element={<Departments/>}></Route>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/patients" element={<Patients />}></Route>
+            <Route path="/therapists" element={<Therapists />}></Route>
+            <Route path="/therapy_orders" element={<Therapy_Orders />}></Route>
+            <Route path="/therapy_sessions" element={<Therapy_Sessions />}></Route>
+            <Route path="/departments" element={<Departments />}></Route>
           </Routes>
         </Router>
         <br></br>

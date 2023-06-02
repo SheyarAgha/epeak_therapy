@@ -26,7 +26,7 @@ function Patients() {
     }
 
     const onEdit = async record => {
-        const editedRecord = {name, date, gender, email, num};
+        const editedRecord = { name, date, gender, email, num };
         const response = await fetch("http://flip2.engr.oregonstate.edu:6573/patients", {
             method: 'PUT',
             body: JSON.stringify(editedRecord),
@@ -49,7 +49,7 @@ function Patients() {
     const [num, setNum] = useState('');
 
     const addRecord = async () => {
-        const newRecord = {name, date, gender, email, num};
+        const newRecord = { name, date, gender, email, num };
         const response = await fetch("http://flip2.engr.oregonstate.edu:6573/patients", {
             method: 'POST',
             body: JSON.stringify(newRecord),
@@ -58,9 +58,9 @@ function Patients() {
             },
         });
         if (response.status === 201) {
-            alert("Successfully added the exercise");
+            alert("Successfully added the pt");
         } else {
-            alert("Failed to add the exercise");
+            alert("Failed to add the pt");
         }
         navigate("/");
     };
@@ -89,73 +89,73 @@ function Patients() {
                 </thead>
                 <tbody>
                     {data.map((record) => <TableRow
-                    record={record}
-                    onEdit={onEdit}
-                    onDelete={onDelete} />)}
+                        record={record}
+                        onEdit={onEdit}
+                        onDelete={onDelete} />)}
                 </tbody>
             </table>
             <div>
-            <h2>Add a Patient</h2>
-            <input
-                type="text"
-                placeholder="Enter name"
-                value={name}
-                onChange={e => setName(e.target.value)} />
-            <input
-                type="text"
-                placeholder="DOB: yyyy-mm-dd"
-                value={date}
-                onChange={e => setDate(e.target.value)} />
-            <select value={gender} onChange={e => setGender(e.target.value)}>
-                <option value=''>Select gender</option>
-                <option value='male'>Male</option>
-                <option value='female'>Female</option>
-            </select>
-            <input
-                type="text"
-                placeholder="Enter email"
-                value={email}
-                onChange={e => setEmail(e.target.value)} />
-            <input
-                type="number"
-                placeholder="Enter number"
-                value={num}
-                onChange={e => setNum(e.target.value)} />
-            <button
-                onClick={addRecord}
+                <h2>Add a Patient</h2>
+                <input
+                    type="text"
+                    placeholder="Enter name"
+                    value={name}
+                    onChange={e => setName(e.target.value)} />
+                <input
+                    type="text"
+                    placeholder="DOB: yyyy-mm-dd"
+                    value={date}
+                    onChange={e => setDate(e.target.value)} />
+                <select value={gender} onChange={e => setGender(e.target.value)}>
+                    <option value=''>Select gender</option>
+                    <option value='male'>Male</option>
+                    <option value='female'>Female</option>
+                </select>
+                <input
+                    type="text"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)} />
+                <input
+                    type="number"
+                    placeholder="Enter number"
+                    value={num}
+                    onChange={e => setNum(e.target.value)} />
+                <button
+                    onClick={addRecord}
                 >Add Patient</button>
-        </div>
-        <div>
-            <h2>Edit a Patient</h2>
-            <input
-                type="text"
-                placeholder="Enter name"
-                value={name}
-                onChange={e => setName(e.target.value)} />
-            <input
-                type="text"
-                placeholder="DOB: yyyy-mm-dd"
-                value={date}
-                onChange={e => setDate(e.target.value)} />
-            <select value={gender} onChange={e => setGender(e.target.value)}>
-                <option value=''>Select gender</option>
-                <option value='male'>Male</option>
-                <option value='female'>Female</option>
-            </select>
-            <input
-                type="text"
-                placeholder="Enter email"
-                value={email}
-                onChange={e => setEmail(e.target.value)} />
-            <input
-                type="number"
-                placeholder="Enter number"
-                value={num}
-                onChange={e => setNum(e.target.value)} />
-            <button
-                onClick={onEdit}
+            </div>
+            <div>
+                <h2>Edit a Patient</h2>
+                <input
+                    type="text"
+                    placeholder="Enter name"
+                    value={name}
+                    onChange={e => setName(e.target.value)} />
+                <input
+                    type="text"
+                    placeholder="DOB: yyyy-mm-dd"
+                    value={date}
+                    onChange={e => setDate(e.target.value)} />
+                <select value={gender} onChange={e => setGender(e.target.value)}>
+                    <option value=''>Select gender</option>
+                    <option value='male'>Male</option>
+                    <option value='female'>Female</option>
+                </select>
+                <input
+                    type="text"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)} />
+                <input
+                    type="number"
+                    placeholder="Enter number"
+                    value={num}
+                    onChange={e => setNum(e.target.value)} />
+                <button
+                    onClick={onEdit}
                 >Edit Patient</button>
-        </div>
+            </div>
         </>
     );
 }

@@ -48,9 +48,9 @@ function TherapySessions() {
                 </thead>
                 <tbody>
                     {data.map((record) => <TableRow
-                    datarow={record}
-                    record={record}
-                    onEdit={onEdit} />)}
+                        datarow={record}
+                        record={record}
+                        onEdit={onEdit} />)}
                 </tbody>
             </table>
         </>

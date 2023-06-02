@@ -3,8 +3,8 @@
 */
 // Express
 const express = require('express');
-const app     = express();
-PORT          = 6573;
+const app = express();
+PORT = 6573;
 app.use(express.json());
 const cors = require('cors');
 app.use(cors());
@@ -17,7 +17,7 @@ var db = require('./database/db-connector');
 */
 
 app.get("/patients", (req, res) => {
-    db.pool.query('SELECT * FROM patients', function(err, results, fields){
+    db.pool.query('SELECT * FROM patients', function (err, results) {
         res.status(200).send(results);
     });
 });
@@ -32,18 +32,28 @@ app.post('/patients', (req, res) => {
     const phone_numberInput = req.body.num;
     db.pool.query(
         'INSERT INTO patients (pt_name, date_of_birth, gender, email, phone_number) VALUES (?, ?, ?, ?, ?)',
-        [pt_nameInput, date_of_birthInput, genderInput, emailInput, phone_numberInput],
-        (error, results, fields) => {
-            if (error) {
-                console.error('Error inserting data: ', error);
-                res.status(500).send('Error inserting data');
-                return;
-            }
-
-            res.status(201).send();
-        }
-    );
+        [pt_nameInput, date_of_birthInput, genderInput, emailInput, phone_numberInput]
+    )
+        .then((results) => {
+            res.status(200).send('Patient created successfully');
+        })
+        .catch((error) => {
+            console.error('Error creating patient', error);
+            res.status(500).send('Error creating patient');
+        });
 });
+//         ,
+//         (error, results) => {
+//             if (error) {
+//                 console.error('Error inserting data: ', error);
+//                 res.status(500).send('Error inserting data');
+//                 return;
+//             }
+
+//             res.status(201).send();
+//         }
+//     );
+// });
 
 //update a patient
 app.put('/patients/:pt_name', (req, res) => {
@@ -57,18 +67,28 @@ app.put('/patients/:pt_name', (req, res) => {
 
     db.pool.query(
         'UPDATE patients SET date_of_birth = ?, gender = ?, email = ?, phone_number = ? WHERE pt_name = ?',
-        [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name],
-        (error, results, fields) => {
-            if (error) {
-                console.error('Error updating data: ', error);
-                res.status(500).send('Error updating data');
-                return;
-            }
-
-            res.status(201).send();
-        }
-    );
+        [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name]
+    )
+        .then((results) => {
+            res.status(200).send('patient updated successfully');
+        })
+        .catch((error) => {
+            console.error('Error updating patient', error);
+            res.status(500).send('Error updating patient');
+        });
 });
+//         ,
+//         (error, results) => {
+//             if (error) {
+//                 console.error('Error updating data: ', error);
+//                 res.status(500).send('Error updating data');
+//                 return;
+//             }
+
+//             res.status(201).send();
+//         }
+//     );
+// });
 
 //delete a patient
 app.delete('/patients/:pt_id', (req, res) => {
@@ -78,18 +98,28 @@ app.delete('/patients/:pt_id', (req, res) => {
 
     db.pool.query(
         'DELETE FROM patients WHERE pt_id = ?',
-        [pt_id],
-        (error, results, fields) => {
-            if (error) {
-                console.error('Error deleting data: ', error);
-                res.status(500).send('Error deleting data');
-                return;
-            }
-
-            res.status(204).send();
-        }
-    );
+        [pt_id]
+    )
+        .then((results) => {
+            res.status(200).send('patient deleted successfully');
+        })
+        .catch((error) => {
+            console.error('Error deleting patient', error);
+            res.status(500).send('Error deleting patient');
+        });
 });
+//         ,
+//         (error, results) => {
+//             if (error) {
+//                 console.error('Error deleting data: ', error);
+//                 res.status(500).send('Error deleting data');
+//                 return;
+//             }
+
+//             res.status(204).send();
+//         }
+//     );
+// });
 
 
 
@@ -98,16 +128,238 @@ app.get('/therapists', (req, res) => {
         res.status(200).send(results);
     });
 });
+//create a therapist
+app.post('/therapists', (req, res) => {
+    const { therapist_nameInput, dept_id_from_dropdown } = req.body;
+
+    db.pool.query(
+        'INSERT INTO therapists (therapist_name, dept_id) VALUES (?, (SELECT dept_id FROM departments WHERE dept_id = ?))',
+        [therapist_nameInput, dept_id_from_dropdown]
+    )
+        .then((results) => {
+            res.status(200).send('therapist created successfully');
+        })
+        .catch((error) => {
+            console.error('Error creating therapist', error);
+            res.status(500).send('Error creating therapist');
+        });
+});
+//         ,
+//         (error, results) => {
+//             if (error) {
+//                 console.error('Error creating therapist: ', error);
+//                 res.status(500).send('Error creating therapist');
+//                 return;
+//             }
+
+//             res.status(200).send('Therapist created successfully');
+//         }
+//     );
+// });
+
+//update a therapist
+app.put('/therapists/:therapist_name', (req, res) => {
+    // const { pt_name } = req.params;
+    // const { date_of_birthInput, genderInput, emailInput } = req.body;
+    const pt_name = req.body.name;
+    const date_of_birthInput = req.body.date;
+    const genderInput = req.body.gender;
+    const emailInput = req.body.email;
+    const phone_numberInput = req.body.num;
+
+    db.pool.query(
+        'UPDATE patients SET date_of_birth = ?, gender = ?, email = ?, phone_number = ? WHERE pt_name = ?',
+        [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name]
+    )
+        .then((results) => {
+            res.status(200).send('Therapist updated successfully');
+        })
+        .catch((error) => {
+            console.error('Error updating therapist', error);
+            res.status(500).send('Error updating therapist');
+        });
+});
+//         ,
+//         (error, results) => {
+//             if (error) {
+//                 console.error('Error updating data: ', error);
+//                 res.status(500).send('Error updating data');
+//                 return;
+//             }
+
+//             res.status(201).send();
+//         }
+//     );
+// });
+
+
+//delete a therapist
+app.delete('/therapists/:therapist_name', (req, res) => {
+    const { therapist_name } = req.params;
+
+    db.pool.query(
+        'DELETE FROM therapists WHERE therapist_id = (SELECT therapist_id FROM therapists WHERE therapist_name = ?)',
+        [therapist_name]
+    )
+        .then((results) => {
+            res.status(200).send('Therapist deleted successfully');
+        })
+        .catch((error) => {
+            console.error('Error deleting therapist', error);
+            res.status(500).send('Error deleting therapist');
+        });
+});
+//         ,
+//         (error, results) => {
+//             if (error) {
+//                 console.error('Error deleting therapist: ', error);
+//                 res.status(500).send('Error deleting therapist');
+//                 return;
+//             }
+
+//             res.status(200).send('Therapist deleted successfully');
+//         }
+//     );
+// });
+
+
+
 
 app.get('/therapy_orders', (req, res) => {
-    db.pool.query('SELECT * FROM therapy_orders', function (err, results, fields) {
+    db.pool.query('SELECT * FROM therapy_orders', function (err, results) {
         res.status(200).send(results);
     });
 });
+
+//create a therapy order
+app.post('/therapy_orders', (req, res) => {
+    const { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput } = req.body;
+
+    db.pool.query(
+        'INSERT INTO therapy_orders (pt_id, associated_dx, ordered_date, therapist_id) VALUES ((SELECT pt_id FROM patients WHERE pt_name = ?),?, ?,(SELECT therapist_id FROM therapists WHERE therapist_name = ?))',
+        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput]
+    )
+        .then((results) => {
+            res.status(200).send('Therapy order created successfully');
+        })
+        .catch((error) => {
+            console.error('Error creating therapy order', error);
+            res.status(500).send('Error creating therapy order');
+        });
+});
+//         ,
+//         (error, results) => {
+//             if (error) {
+//                 console.error('Error creating order', error);
+//                 restart.status(500).send('Error creating therapy order');
+//                 return;
+//             }
+
+//             res.status(200).send('Therapy order created successfully');
+//         }
+//     );
+// });
+
+//update a therapy order
+app.put('/therapy_orders/:id', (req, res) => {
+    const therapyOrderId = req.params.id;
+    const { associated_dxInput, order_idInput, pt_name_from_dropdown, therapist_name_from_dropdown } = req.body;
+
+    db.pool.query(
+        'UPDATE therapy_orders ' +
+        'SET associated_dx = ?, ordered_date = ? ' +
+        'WHERE pt_id = (SELECT pt_id FROM patients WHERE pt_name = ?) ' +
+        'AND therapist_id = (SELECT therapist_id FROM therapists WHERE therapist_name = ?)',
+        [associated_dxInput, order_idInput, pt_name_from_dropdown, therapist_name_from_dropdown]
+    )
+        .then((results) => {
+            res.status(200).send('Therapy order updated successfully');
+        })
+        .catch((error) => {
+            console.error('Error updating therapy order', error);
+            res.status(500).send('Error updating therapy order');
+        });
+});
+//delete a therapy order
+app.delete('/therapy_orders/:id', (req, res) => {
+    const order_idInput = req.params.id;
+
+    db.pool.query(
+        'DELETE FROM therapy_orders WHERE order_id = ?',
+        [order_idInput]
+    )
+        .then((results) => {
+            res.status(200).send('Therapy order deleted successfully');
+        })
+        .catch((error) => {
+            console.error('Error deleting therapy order', error);
+            res.status(500).send('Error deleting therapy order');
+        });
+});
+
+
+
 app.get('/therapy_sessions', (req, res) => {
     db.pool.query('SELECT * FROM therapy_sessions', function (err, results, fields) {
         res.status(200).send(results);
     });
+});
+//create a therapy session
+app.post('/therapy_sessions', (req, res) => {
+    const { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput } = req.body;
+
+    db.pool.query('INSERT INTO therapy_sessions (order_id, pt_id, therapist_id, session_date, session_summary) VALUES ((SELECT order_id FROM therapy_orders WHERE order_id = ?), (SELECT pt_id  FROM patients WHERE pt_name = ?), (SELECT therapist_id FROM therapists WHERE therapist_name = ?),?,?))',
+        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput])
+        .then((results) => {
+            res.status(200).send('Therapy session created successfully');
+        })
+        .catch((error) => {
+            console.error('Error creating therapy session', error);
+            res.status(500).send('Error creating therapy session');
+        });
+});
+
+//update a therapy session
+app.put('/therapy-sessions', (req, res) => {
+    // Extract the necessary data from the request body or query parameters
+    const { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput } = req.body;
+
+    // Execute the MySQL query to update the therapy session
+    const query = `UPDATE therapy_sessions
+                   SET session_date = ?, session_summary = ?
+                   WHERE (
+                      order_id = (SELECT order_id FROM therapy_orders WHERE order_id = ?),
+                      pt_id = (SELECT pt_id FROM patients WHERE pt_name = ?),
+                      therapist_id = (SELECT therapist_id FROM therapists WHERE therapist_name = ?)
+                   );`;
+
+    const values = [session_dateInput, session_summaryInput, order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown];
+
+    db.pool.query(query, values)
+        .then(() => {
+            res.status(200).send('Therapy session updated successfully.');
+        })
+        .catch((error) => {
+            console.error('Error updating therapy session:', error);
+            res.status(500).send('An error occurred while updating the therapy session.');
+        });
+});
+
+//delete a therapy session
+app.delete('/therapy_sessions/:id', (req, res) => {
+    const session_idInput = req.params.id;
+
+    db.pool.query(
+        'DELETE FROM therapy_sessions WHERE session_id = ?',
+        [session_idInput]
+    )
+        .then((results) => {
+            res.status(200).send('Therapy session deleted successfully');
+        })
+        .catch((error) => {
+            console.error('Error deleting therapy session', error);
+            res.status(500).send('Error deleting therapy session');
+        });
 });
 
 app.get('/departments', (req, res) => {
@@ -115,7 +367,35 @@ app.get('/departments', (req, res) => {
         res.status(200).send(results);
     });
 });
+//update a department
+app.put('/departments/:dept_id', (req, res) => {
+    const { dept_id } = req.params;
+    const { dept_name, dept_locationInput } = req.body;
 
+    db.pool.query(
+        'UPDATE departments SET dept_location = ? WHERE dept_id = (SELECT dept_id FROM departments WHERE dept_name = ?)',
+        [dept_locationInput, dept_name]
+    )
+        .then((results) => {
+            res.status(200).send('Department updated successfully');
+        })
+        .catch((error) => {
+            console.error('Error updating department', error);
+            res.status(500).send('Error updating department');
+        });
+});
+//         ,
+//         (error, results) => {
+//             if (error) {
+//                 console.error('Error updating department: ', error);
+//                 res.status(500).send('Error updating department');
+//                 return;
+//             }
+
+//             res.status(200).send('Department updated successfully');
+//         }
+//     );
+// });
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);

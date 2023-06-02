@@ -35,9 +35,9 @@ function Patients() {
             },
         });
         if (response.status === 201) {
-            alert("Successfully edited the exercise");
+            alert("Successfully updated the patient record");
         } else {
-            alert("Failed to edited the exercise");
+            alert("Failed to update the patient record");
         }
         navigate("/");
     };
@@ -47,6 +47,12 @@ function Patients() {
     const [gender, setGender] = useState('');
     const [email, setEmail] = useState('');
     const [num, setNum] = useState('');
+
+    const [editname, editName] = useState('');
+    const [editdate, editDate] = useState('');
+    const [editgender, editGender] = useState('');
+    const [editemail, editEmail] = useState('');
+    const [editnum, editNum] = useState('');
 
     const addRecord = async () => {
         const newRecord = { name, date, gender, email, num };
@@ -58,9 +64,9 @@ function Patients() {
             },
         });
         if (response.status === 201) {
-            alert("Successfully added the pt");
+            alert("Successfully added the patient");
         } else {
-            alert("Failed to add the pt");
+            alert("Failed to add the patient");
         }
         navigate("/");
     };
@@ -126,18 +132,18 @@ function Patients() {
                 >Add Patient</button>
             </div>
             <div>
-                <h2>Edit a Patient</h2>
+                <h2>Update a Patient</h2>
                 <input
                     type="text"
                     placeholder="Enter name"
-                    value={name}
-                    onChange={e => setName(e.target.value)} />
+                    value={editname}
+                    onChange={e => editName(e.target.value)} />
                 <input
                     type="text"
                     placeholder="DOB: yyyy-mm-dd"
-                    value={date}
-                    onChange={e => setDate(e.target.value)} />
-                <select value={gender} onChange={e => setGender(e.target.value)}>
+                    value={editdate}
+                    onChange={e => editDate(e.target.value)} />
+                <select value={editgender} onChange={e => editGender(e.target.value)}>
                     <option value=''>Select gender</option>
                     <option value='male'>Male</option>
                     <option value='female'>Female</option>
@@ -145,13 +151,13 @@ function Patients() {
                 <input
                     type="text"
                     placeholder="Enter email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)} />
+                    value={editemail}
+                    onChange={e => editEmail(e.target.value)} />
                 <input
                     type="number"
                     placeholder="Enter number"
-                    value={num}
-                    onChange={e => setNum(e.target.value)} />
+                    value={editnum}
+                    onChange={e => editNum(e.target.value)} />
                 <button
                     onClick={onEdit}
                 >Edit Patient</button>

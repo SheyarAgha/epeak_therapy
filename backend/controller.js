@@ -121,28 +121,28 @@ app.post('/therapists', (req, res) => {
     );
 });
 
-//update a therapist
-app.put('/therapists/:therapist_name', (req, res) => {
-    // const { pt_name } = req.params;
-    // const { date_of_birthInput, genderInput, emailInput } = req.body;
-    const pt_name = req.body.name;
-    const date_of_birthInput = req.body.date;
-    const genderInput = req.body.gender;
-    const emailInput = req.body.email;
-    const phone_numberInput = req.body.num;
+//update a therapist--not needed
+// app.put('/therapists/:therapist_name', (req, res) => {
+//     // const { pt_name } = req.params;
+//     // const { date_of_birthInput, genderInput, emailInput } = req.body;
+//     const pt_name = req.body.name;
+//     const date_of_birthInput = req.body.date;
+//     const genderInput = req.body.gender;
+//     const emailInput = req.body.email;
+//     const phone_numberInput = req.body.num;
 
-    db.pool.query(
-        'UPDATE patients SET date_of_birth = ?, gender = ?, email = ?, phone_number = ? WHERE pt_name = ?',
-        [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name]
-    )
-        .then((results) => {
-            res.status(200).send('Therapist updated successfully');
-        })
-        .catch((error) => {
-            console.error('Error updating therapist', error);
-            res.status(500).send('Error updating therapist');
-        });
-});
+//     db.pool.query(
+//         'UPDATE patients SET date_of_birth = ?, gender = ?, email = ?, phone_number = ? WHERE pt_name = ?',
+//         [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name]
+//     )
+//         .then((results) => {
+//             res.status(200).send('Therapist updated successfully');
+//         })
+//         .catch((error) => {
+//             console.error('Error updating therapist', error);
+//             res.status(500).send('Error updating therapist');
+//         });
+// });
 //         ,
 //         (error, results) => {
 //             if (error) {
@@ -163,28 +163,28 @@ app.delete('/therapists/:therapist_name', (req, res) => {
 
     db.pool.query(
         'DELETE FROM therapists WHERE therapist_id = (SELECT therapist_id FROM therapists WHERE therapist_name = ?)',
-        [therapist_name]
-    )
-        .then((results) => {
-            res.status(200).send('Therapist deleted successfully');
-        })
-        .catch((error) => {
-            console.error('Error deleting therapist', error);
-            res.status(500).send('Error deleting therapist');
-        });
-});
-//         ,
-//         (error, results) => {
-//             if (error) {
-//                 console.error('Error deleting therapist: ', error);
-//                 res.status(500).send('Error deleting therapist');
-//                 return;
-//             }
+        [therapist_name],
+        (error, results) => {
+            if (error) {
+                console.error('Error deleting therapist: ', error);
+                res.status(500).send('Error deleting therapist');
+                return;
+            }
 
+            res.status(200).send('Therapist deleted successfully');
+        }
+    );
+});
+//     )
+//         .then((results) => {
 //             res.status(200).send('Therapist deleted successfully');
-//         }
-//     );
+//         })
+//         .catch((error) => {
+//             console.error('Error deleting therapist', error);
+//             res.status(500).send('Error deleting therapist');
+//         });
 // });
+
 
 
 
@@ -201,28 +201,28 @@ app.post('/therapy_orders', (req, res) => {
 
     db.pool.query(
         'INSERT INTO therapy_orders (pt_id, associated_dx, ordered_date, therapist_id) VALUES ((SELECT pt_id FROM patients WHERE pt_name = ?),?, ?,(SELECT therapist_id FROM therapists WHERE therapist_name = ?))',
-        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput]
-    )
-        .then((results) => {
-            res.status(200).send('Therapy order created successfully');
-        })
-        .catch((error) => {
-            console.error('Error creating therapy order', error);
-            res.status(500).send('Error creating therapy order');
-        });
-});
-//         ,
-//         (error, results) => {
-//             if (error) {
-//                 console.error('Error creating order', error);
-//                 restart.status(500).send('Error creating therapy order');
-//                 return;
-//             }
+        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput],
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error creating order', error);
+                restart.status(500).send('Error creating therapy order');
+                return;
+            }
 
+            res.status(200).send('Therapy order created successfully');
+        }
+    );
+});
+//     )
+//         .then((results) => {
 //             res.status(200).send('Therapy order created successfully');
-//         }
-//     );
+//         })
+//         .catch((error) => {
+//             console.error('Error creating therapy order', error);
+//             res.status(500).send('Error creating therapy order');
+//         });
 // });
+
 
 //update a therapy order
 app.put('/therapy_orders/:id', (req, res) => {
@@ -234,32 +234,54 @@ app.put('/therapy_orders/:id', (req, res) => {
         'SET associated_dx = ?, ordered_date = ? ' +
         'WHERE pt_id = (SELECT pt_id FROM patients WHERE pt_name = ?) ' +
         'AND therapist_id = (SELECT therapist_id FROM therapists WHERE therapist_name = ?)',
-        [associated_dxInput, order_idInput, pt_name_from_dropdown, therapist_name_from_dropdown]
-    )
-        .then((results) => {
-            res.status(200).send('Therapy order updated successfully');
-        })
-        .catch((error) => {
-            console.error('Error updating therapy order', error);
-            res.status(500).send('Error updating therapy order');
-        });
+        [associated_dxInput, order_idInput, pt_name_from_dropdown, therapist_name_from_dropdown],
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error creating order', error);
+                restart.status(500).send('Error creating therapy order');
+                return;
+            }
+
+            res.status(200).send('Therapy order created successfully');
+        }
+    );
 });
+//     )
+//         .then((results) => {
+//             res.status(200).send('Therapy order updated successfully');
+//         })
+//         .catch((error) => {
+//             console.error('Error updating therapy order', error);
+//             res.status(500).send('Error updating therapy order');
+//         });
+// });
 //delete a therapy order
 app.delete('/therapy_orders/:id', (req, res) => {
     const order_idInput = req.params.id;
 
     db.pool.query(
         'DELETE FROM therapy_orders WHERE order_id = ?',
-        [order_idInput]
-    )
-        .then((results) => {
+        [order_idInput],
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error deleting order', error);
+                restart.status(500).send('Error deleting therapy order');
+                return;
+            }
+
             res.status(200).send('Therapy order deleted successfully');
-        })
-        .catch((error) => {
-            console.error('Error deleting therapy order', error);
-            res.status(500).send('Error deleting therapy order');
-        });
+        }
+    );
 });
+//     )
+//         .then((results) => {
+//             res.status(200).send('Therapy order deleted successfully');
+//         })
+//         .catch((error) => {
+//             console.error('Error deleting therapy order', error);
+//             res.status(500).send('Error deleting therapy order');
+//         });
+// });
 
 
 
@@ -273,15 +295,28 @@ app.post('/therapy_sessions', (req, res) => {
     const { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput } = req.body;
 
     db.pool.query('INSERT INTO therapy_sessions (order_id, pt_id, therapist_id, session_date, session_summary) VALUES ((SELECT order_id FROM therapy_orders WHERE order_id = ?), (SELECT pt_id  FROM patients WHERE pt_name = ?), (SELECT therapist_id FROM therapists WHERE therapist_name = ?),?,?))',
-        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput])
-        .then((results) => {
+        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput]
+        ,
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error creating session', error);
+                restart.status(500).send('Error creating therapy session');
+                return;
+            }
+
             res.status(200).send('Therapy session created successfully');
-        })
-        .catch((error) => {
-            console.error('Error creating therapy session', error);
-            res.status(500).send('Error creating therapy session');
-        });
+        }
+    );
 });
+//         )
+//         .then((results) => {
+//             res.status(200).send('Therapy session created successfully');
+//         })
+//         .catch((error) => {
+//             console.error('Error creating therapy session', error);
+//             res.status(500).send('Error creating therapy session');
+//         });
+// });
 
 //update a therapy session
 app.put('/therapy-sessions', (req, res) => {
@@ -309,22 +344,51 @@ app.put('/therapy-sessions', (req, res) => {
         });
 });
 
+
+
+app.put('/therapy_orders/:id', (req, res) => {
+    const therapyOrderId = req.params.id;
+    const { associated_dxInput, order_idInput, pt_name_from_dropdown, therapist_name_from_dropdown } = req.body;
+
+    db.pool.query(
+        'UPDATE therapy_orders ' +
+        'SET associated_dx = ?, ordered_date = ? ' +
+        'WHERE pt_id = (SELECT pt_id FROM patients WHERE pt_name = ?) ' +
+        'AND therapist_id = (SELECT therapist_id FROM therapists WHERE therapist_name = ?)',
+        [associated_dxInput, order_idInput, pt_name_from_dropdown, therapist_name_from_dropdown],
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error creating order', error);
+                restart.status(500).send('Error creating therapy order');
+                return;
+            }
+
+            res.status(200).send('Therapy order created successfully');
+        }
+    );
+});
+
+
+
 //delete a therapy session
 app.delete('/therapy_sessions/:id', (req, res) => {
     const session_idInput = req.params.id;
 
     db.pool.query(
         'DELETE FROM therapy_sessions WHERE session_id = ?',
-        [session_idInput]
-    )
-        .then((results) => {
+        [session_idInput],
+        (error, results, fields) => {
+            if (error) {
+                console.error('Error deleting session', error);
+                restart.status(500).send('Error deleting therapy session');
+                return;
+            }
+
             res.status(200).send('Therapy session deleted successfully');
-        })
-        .catch((error) => {
-            console.error('Error deleting therapy session', error);
-            res.status(500).send('Error deleting therapy session');
-        });
+        }
+    );
 });
+
 
 app.get('/departments', (req, res) => {
     db.pool.query('SELECT * FROM departments', function (err, results, fields) {

@@ -4,25 +4,100 @@ import TableRow from "../components/TableRow";
 
 
 function TherapyOrders() {
+    const [orders, setOrders] = useState([]);
+    const [patient, setPatient] = useState('');
+    const [patients, setPatients] = useState([]);
+    const [diagnosis, setDiagnosis] = useState('');
+    const [date, setDate] = useState('');
+    const [therapist, setTherapist] = useState('');
+    const [therapists, setTherapists] = useState([]);
+    const [num, setNum] = useState('');
 
-    const [data, setData] = useState([]);
+    const [editorder, editOrder] = useState('');
+    const [editpatient, editPatient] = useState('');
+    const [editassociateddx, editAssociatedDx] = useState('');
+    const [editorderdate, editOrderDate] = useState('');
+    const [edittherapist, editTherapist] = useState('');
+    const [editcompletion, editCompletion] = useState('');
 
     const navigate = useNavigate();
 
-    const onDelete = async record => {
-        // const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/patients/${record.pt_id}`,
-        //     { method: 'DELETE' });
-        // if (response.status === 204) {
-        //     navigate("/patients");
-        // } else {
-        //     console.error('Failed');
-        // }
-    }
+    const fetchTherapists = async () => {
+        const response = await fetch('http://flip2.engr.oregonstate.edu:6573/therapists');
+        const therapists = await response.json();
+        setTherapists(therapists);
+    };
 
+    const fetchPatients = async () => {
+        const response = await fetch('http://flip2.engr.oregonstate.edu:6573/patients');
+        const patients = await response.json();
+        setPatients(patients);
+    };
+
+    const fetchOrders = async () => {
+        const response = await fetch('http://flip2.engr.oregonstate.edu:6573/therapy_orders');
+        const orders = await response.json();
+        setOrders(orders);
+    };
+
+    const addRecord = async () => {
+        const newRecord = { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, order_dateInput, completedInput };
+        const response = await fetch("http://flip2.engr.oregonstate.edu:6573/therapy_orders", {
+            method: 'POST',
+            body: JSON.stringify(newRecord),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (response.status === 201) {
+            alert("Successfully added the order");
+        } else {
+            alert("Failed to add the order");
+        }
+        navigate("/");
+    };
+
+    // const onDelete = async record => {
+    //     // const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/patients/${record.pt_id}`,
+    //     //     { method: 'DELETE' });
+    //     // if (response.status === 204) {
+    //     //     navigate("/patients");
+    //     // } else {
+    //     //     console.error('Failed');
+    //     // }
+    // }
+
+    const onDelete = async record => {
+        const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/therapy_orders/${record.order_id}`, {
+            method: 'DELETE'
+        });
+        if (response.status === 204) {
+            setOrders(orders.filter(order => order.order_id !== record.order_id));
+        } else {
+            console.error('Failed to delete order');
+        }
+    };
+
+    // const onEdit = async record => {
+    //     // setRecordToEdit(record);
+    //     // navigate("/EditExercise");
+    // }
     const onEdit = async record => {
-        // setRecordToEdit(record);
-        // navigate("/EditExercise");
-    }
+        const editedRecord = { editorder, editpatient, editassociateddx, editorderdate, edittherapist, editcompletion };
+        const response = await fetch("http://flip2.engr.oregonstate.edu:6573/therapy_orders", {
+            method: 'PUT',
+            body: JSON.stringify(editedRecord),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (response.status === 202) {
+            alert("Successfully updated the order record");
+        } else {
+            alert("Failed to update the order record");
+        }
+        navigate("/");
+    };
 
     const loadTherapyOrders = async () => {
         const response = await fetch("http://flip2.engr.oregonstate.edu:6573/therapy_orders");
@@ -32,7 +107,11 @@ function TherapyOrders() {
 
     useEffect(() => {
         loadTherapyOrders();
+        fetchTherapists();
+        fetchPatients();
+        fetchOrders;
     }, []);
+
 
     return (
         <>
@@ -50,9 +129,102 @@ function TherapyOrders() {
                     {data.map((record) => <TableRow
                         datarow={record}
                         record={record}
-                        onEdit={onEdit} />)}
+                        onEdit={onEdit}
+                        onDelete={onDelete} />)}
                 </tbody>
             </table>
+            <div>
+                <h2>Add an Order</h2>
+
+                <select value={order} onChange={e => setOrder(e.target.value)}>
+                    <option value=''>Select Order</option>
+                    {orders.map((order) => (
+                        <option key={order.order_id} value={order.order_id}>
+                            {order.order_id}
+                        </option>
+                    ))}
+                </select>
+                <select value={patient} onChange={e => setPatient(e.target.value)}>
+                    <option value=''>Select Patient</option>
+                    {patients.map((patient) => (
+                        <option key={patient.pt_id} value={patient.pt_id}>
+                            {patient.pt_id}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="text"
+                    placeholder="Enter diagnosis"
+                    value={diagnosis}
+                    onChange={e => setDiagnosis(e.target.value)} />
+                <input
+                    type="text"
+                    placeholder="ordered date: yyyy-mm-dd"
+                    value={date}
+                    onChange={e => setDate(e.target.value)} />
+                <select value={therapist} onChange={e => setTherapist(e.target.value)}>
+                    <option value=''>Select Therapist</option>
+                    {therapists.map((therapist) => (
+                        <option key={therapist.therapist_id} value={therapist.therapist_id}>
+                            {dept.dept_name}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="number"
+                    placeholder="Enter 0 for yes, 1 for no"
+                    value={num}
+                    onChange={e => setNum(e.target.value)} />
+                <button
+                    onClick={addRecord}
+                >Add Order</button>
+            </div>
+            <div>
+                <h2>Update an Order</h2>
+
+                <select value={editorder} onChange={e => editOrder(e.target.value)}>
+                    <option value=''>Select Order</option>
+                    {orders.map((order) => (
+                        <option key={order.order_id} value={order.order_id}>
+                            {order.order_id}
+                        </option>
+                    ))}
+                </select>
+                <select value={editpatient} onChange={e => editPatient(e.target.value)}>
+                    <option value=''>Select Patient</option>
+                    {patients.map((patient) => (
+                        <option key={patient.pt_id} value={patient.pt_id}>
+                            {patient.pt_id}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="text"
+                    placeholder="Enter diagnosis"
+                    value={editassociateddx}
+                    onChange={e => editAssociatedDx(e.target.value)} />
+                <input
+                    type="text"
+                    placeholder="ordered date: yyyy-mm-dd"
+                    value={editorderdate}
+                    onChange={e => editOrderDate(e.target.value)} />
+                <select value={edittherapist} onChange={e => editTherapist(e.target.value)}>
+                    <option value=''>Select Therapist</option>
+                    {therapists.map((therapist) => (
+                        <option key={therapist.therapist_id} value={therapist.therapist_id}>
+                            {dept.dept_name}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="number"
+                    placeholder="Enter 0 for yes, 1 for no"
+                    value={editnum}
+                    onChange={e => editNum(e.target.value)} />
+                <button
+                    onClick={onEdit}
+                >Update Order</button>
+            </div>
         </>
     );
 }

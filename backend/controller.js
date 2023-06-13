@@ -248,12 +248,6 @@ app.put('/therapy_orders/:id', (req, res) => {
 });
 
 
-
-app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}...`);
-});
-
-
 app.delete('/therapy_orders/:id', (req, res) => {
     const order_idInput = req.params.id;
 

@@ -105,7 +105,9 @@ function Patients() {
                     {data.map((record) => <TableRow
                         record={record}
                         fillEdit={fillEdit}
-                        onDelete={onDelete} />)}
+                        onDelete={onDelete}
+                        editButton={true}
+                        deleteButton={true} />)}
                 </tbody>
             </table>
             <div>

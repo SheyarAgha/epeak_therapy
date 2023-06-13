@@ -6,9 +6,9 @@ import TableRow from "../components/TableRow";
 function TherapyOrders() {
 
     const [data, setData] = useState([]);
-    const [order, setOrder] = useState([]);
+    // const [order, setOrder] = useState([]);
 
-    const [orders, setOrders] = useState([]);
+    // const [orders, setOrders] = useState([]);
     const [patient, setPatient] = useState('');
     const [patients, setPatients] = useState([]);
     const [diagnosis, setDiagnosis] = useState('');
@@ -24,8 +24,6 @@ function TherapyOrders() {
     const [edittherapist, editTherapist] = useState('');
     const [editcompletion, editCompletion] = useState('');
 
-    const navigate = useNavigate();
-
     const fetchTherapists = async () => {
         const response = await fetch('http://flip2.engr.oregonstate.edu:6573/therapists');
         const therapists = await response.json();
@@ -38,11 +36,11 @@ function TherapyOrders() {
         setPatients(patients);
     };
 
-    const fetchOrders = async () => {
-        const response = await fetch('http://flip2.engr.oregonstate.edu:6573/therapy_orders');
-        const orders = await response.json();
-        setOrders(orders);
-    };
+    // const fetchOrders = async () => {
+    //     const response = await fetch('http://flip2.engr.oregonstate.edu:6573/therapy_orders');
+    //     const orders = await response.json();
+    //     setOrders(orders);
+    // };
 
     const addRecord = async () => {
         const newRecord = { patient, diagnosis, date, therapist, num };
@@ -61,15 +59,6 @@ function TherapyOrders() {
         }
     };
 
-    // const onDelete = async record => {
-    //     // const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/patients/${record.pt_id}`,
-    //     //     { method: 'DELETE' });
-    //     // if (response.status === 204) {
-    //     //     navigate("/patients");
-    //     // } else {
-    //     //     console.error('Failed');
-    //     // }
-    // }
 
     const onDelete = async record => {
         const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/therapy_orders/${record.order_id}`, {
@@ -82,10 +71,14 @@ function TherapyOrders() {
         }
     };
 
-    // const onEdit = async record => {
-    //     // setRecordToEdit(record);
-    //     // navigate("/EditExercise");
-    // }
+    const fillEdit = (record) => {
+        editOrder(record.order_id)
+        editAssociatedDx(record.associated_dx)
+        editOrderDate(record.ordered_date)
+        editTherapist(record.therapist_id)
+        editCompletion(record.completed)
+    };
+
     const onEdit = async record => {
         const editedRecord = { editorder, editpatient, editassociateddx, editorderdate, edittherapist, editcompletion };
         const response = await fetch("http://flip2.engr.oregonstate.edu:6573/therapy_orders", {
@@ -113,7 +106,6 @@ function TherapyOrders() {
         loadTherapyOrders();
         fetchTherapists();
         fetchPatients();
-        fetchOrders();
     }, []);
 
 
@@ -131,10 +123,11 @@ function TherapyOrders() {
                 </thead>
                 <tbody>
                     {data.map((record) => <TableRow
-                        datarow={record}
                         record={record}
-                        onEdit={onEdit}
-                        onDelete={onDelete} />)}
+                        fillEdit={fillEdit}
+                        onDelete={onDelete}
+                        editButton={true}
+                        deleteButton={true}/>)}
                 </tbody>
             </table>
             <div>
@@ -188,7 +181,7 @@ function TherapyOrders() {
 
                 <select value={editorder} onChange={e => editOrder(e.target.value)}>
                     <option value=''>Select Order</option>
-                    {orders.map((order) => (
+                    {data.map((order) => (
                         <option key={order.order_id} value={order.order_id}>
                             {order.order_id}
                         </option>

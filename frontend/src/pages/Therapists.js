@@ -29,11 +29,11 @@ function Therapists() {
         const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/therapists/${record.therapist_id}`,
             { method: 'DELETE' });
         if (response.status === 204) {
-            setData(data.filter(e => e.therapist_id != record.therapist_id));
+            loadTherapists();
         } else {
             console.error('Failed');
         }
-    }
+    };
 
     const loadTherapists = async () => {
         const response = await fetch("http://flip2.engr.oregonstate.edu:6573/therapists");
@@ -58,10 +58,10 @@ function Therapists() {
         });
         if (response.status === 201) {
             alert("Successfully added the therapist");
+            loadTherapists();
         } else {
             alert("Failed to add the therapist");
         }
-        navigate("/");
     };
 
     useEffect(() => {
@@ -80,10 +80,11 @@ function Therapists() {
                 </thead>
                 <tbody>
                     {data.map((record) => <TableRow
-                        datarow={record}
                         record={record}
                         onDelete={onDelete}
                         onEdit={onEdit}
+                        editButton={false}
+                        deleteButton={true}
                     />)}
                 </tbody>
             </table>

@@ -10,19 +10,32 @@ function Departments() {
     const [departmentLocation, setDepartmentLocation] = useState("");
     const navigate = useNavigate();
 
-    const onDelete = async record => {
-        // const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/patients/${record.pt_id}`,
-        //     { method: 'DELETE' });
-        // if (response.status === 204) {
-        //     navigate("/patients");
-        // } else {
-        //     console.error('Failed');
-        // }
-    }
+    // const onDelete = async record => {
+    //     const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/departments/${record.dept_id}`,
+    //         { method: 'DELETE' });
+    //     if (response.status === 204) {
+    //         loadDepartments();
+    //     } else {
+    //         console.error('Failed');
+    //     }
+    // };
 
-    const onEdit = async record => {
-        // setSelectedDepartment(record.dept_name);
-    };
+    // const onEdit = async record => {
+    //     const editedRecord = {  };
+    //     const response = await fetch("http://flip2.engr.oregonstate.edu:6573/departments", {
+    //         method: 'PUT',
+    //         body: JSON.stringify(editedRecord),
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //     });
+    //     if (response.status === 202) {
+    //         alert("Successfully updated the department");
+    //         loadTherapyOrders();
+    //     } else {
+    //         alert("Failed to update the department");
+    //     }
+    // };
 
     const updateRecord = async () => {
         const departmentId = data.find(
@@ -43,10 +56,10 @@ function Departments() {
         });
         if (response.status === 202) {
             alert("Successfully edited the dept");
+            loadDepartments();
         } else {
             alert("Failed to edit dept");
         }
-        navigate("/");
     }
 
     const loadDepartments = async () => {
@@ -70,10 +83,10 @@ function Departments() {
                 </thead>
                 <tbody>
                     {data.map((record) => <TableRow
-                        datarow={record}
                         record={record}
-                        onEdit={onEdit}
                         key={record.dept_id}
+                        editButton={false}
+                        deleteButton={false}
                     />)}
                 </tbody>
             </table>

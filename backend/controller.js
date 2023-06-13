@@ -75,8 +75,6 @@ app.put('/patients', (req, res) => {
 //delete a patient
 app.delete('/patients/:pt_id', (req, res) => {
     const { pt_id } = req.params;
-    const { date_of_birthInput, genderInput, emailInput } = req.body;
-    // const pt_name = "Izzy";
 
     db.pool.query(
         'DELETE FROM patients WHERE pt_id = ?',
@@ -85,7 +83,6 @@ app.delete('/patients/:pt_id', (req, res) => {
             if (error) {
                 console.error('Error deleting data: ', error);
                 res.status(500).send('Error deleting data');
-                return;
             } else {
                 res.status(204).send();
             }
@@ -121,57 +118,22 @@ app.post('/therapists', (req, res) => {
     );
 });
 
-//update a therapist--not needed
-// app.put('/therapists/:therapist_name', (req, res) => {
-//     // const { pt_name } = req.params;
-//     // const { date_of_birthInput, genderInput, emailInput } = req.body;
-//     const pt_name = req.body.name;
-//     const date_of_birthInput = req.body.date;
-//     const genderInput = req.body.gender;
-//     const emailInput = req.body.email;
-//     const phone_numberInput = req.body.num;
-
-//     db.pool.query(
-//         'UPDATE patients SET date_of_birth = ?, gender = ?, email = ?, phone_number = ? WHERE pt_name = ?',
-//         [date_of_birthInput, genderInput, emailInput, phone_numberInput, pt_name]
-//     )
-//         .then((results) => {
-//             res.status(200).send('Therapist updated successfully');
-//         })
-//         .catch((error) => {
-//             console.error('Error updating therapist', error);
-//             res.status(500).send('Error updating therapist');
-//         });
-// });
-//         ,
-//         (error, results) => {
-//             if (error) {
-//                 console.error('Error updating data: ', error);
-//                 res.status(500).send('Error updating data');
-//                 return;
-//             }
-
-//             res.status(201).send();
-//         }
-//     );
-// });
 
 
 //delete a therapist
-app.delete('/therapists/:therapist_name', (req, res) => {
-    const { therapist_name } = req.params;
+app.delete('/therapists/:therapist_id', (req, res) => {
+    const { therapist_id } = req.params;
 
     db.pool.query(
-        'DELETE FROM therapists WHERE therapist_id = (SELECT therapist_id FROM therapists WHERE therapist_name = ?)',
-        [therapist_name],
-        (error, results) => {
+        'DELETE FROM therapists WHERE therapist_id = ?',
+        [therapist_id],
+        (error, result) => {
             if (error) {
                 console.error('Error deleting therapist: ', error);
                 res.status(500).send('Error deleting therapist');
-                return;
+            } else {
+                res.status(204).send('Therapist deleted successfully');
             }
-
-            res.status(200).send('Therapist deleted successfully');
         }
     );
 });
@@ -262,19 +224,22 @@ app.get('/therapy_sessions', (req, res) => {
 
 //create a therapy session
 app.post('/therapy_sessions', (req, res) => {
-    const { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput } = req.body;
+    const order = req.body.order
+    const patient = req.body.patient
+    const therapist = req.body.therapist
+    const date = req.body.date
+    const summary = req.body.summary
 
-    db.pool.query('INSERT INTO therapy_sessions (order_id, pt_id, therapist_id, session_date, session_summary) VALUES ((SELECT order_id FROM therapy_orders WHERE order_id = ?), (SELECT pt_id  FROM patients WHERE pt_name = ?), (SELECT therapist_id FROM therapists WHERE therapist_name = ?),?,?))',
-        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput]
-        ,
+    db.pool.query(
+        'INSERT INTO therapy_sessions (order_id, pt_id, therapist_id, session_date, session_summary) VALUES (?, ?, ?, ?, ?))',
+        [order, patient, therapist, date, summary],
         (error, results, fields) => {
             if (error) {
                 console.error('Error creating session', error);
                 res.status(500).send('Error creating therapy session');
-                return;
+            } else {
+                res.status(201).send('Therapy session created successfully');
             }
-
-            res.status(200).send('Therapy session created successfully');
         }
     );
 });
@@ -282,28 +247,34 @@ app.post('/therapy_sessions', (req, res) => {
 
 //update a therapy session
 app.put('/therapy-sessions', (req, res) => {
-    // Extract the necessary data from the request body or query parameters
-    const { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput } = req.body;
+    const session = req.body.session_id
+    const order = req.body.order
+    const patient = req.body.patient
+    const therapist = req.body.therapist
+    const date = req.body.date
+    const summary = req.body.summary
 
     // Execute the MySQL query to update the therapy session
     const query = `UPDATE therapy_sessions
                    SET session_date = ?, session_summary = ?
                    WHERE (
-                      order_id = (SELECT order_id FROM therapy_orders WHERE order_id = ?),
-                      pt_id = (SELECT pt_id FROM patients WHERE pt_name = ?),
-                      therapist_id = (SELECT therapist_id FROM therapists WHERE therapist_name = ?)
+                      order_id ?,
+                      pt_id = ?,
+                      therapist_id = ?
                    );`;
 
-    const values = [session_dateInput, session_summaryInput, order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown];
+    const values = [date, summary, order, patient, therapist];
 
-    db.pool.query(query, values)
-        .then(() => {
-            res.status(200).send('Therapy session updated successfully.');
-        })
-        .catch((error) => {
-            console.error('Error updating therapy session:', error);
-            res.status(500).send('An error occurred while updating the therapy session.');
-        });
+    db.pool.query(query, values,
+        (error, result, fields) => {
+            if (error) {
+                console.error('Error updating order', error);
+                res.status(500).send('Error updating therapy order');
+            } else {
+                res.status(202).send(result);
+            }
+        }
+    );
 });
 
 

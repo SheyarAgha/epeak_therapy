@@ -197,11 +197,11 @@ app.get('/therapy_orders', (req, res) => {
 
 //create a therapy order
 app.post('/therapy_orders', (req, res) => {
-    const { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput } = req.body;
+    const { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, order_dateInput, completedInput } = req.body;
 
     db.pool.query(
         'INSERT INTO therapy_orders (pt_id, associated_dx, ordered_date, therapist_id) VALUES ((SELECT pt_id FROM patients WHERE pt_name = ?),?, ?,(SELECT therapist_id FROM therapists WHERE therapist_name = ?))',
-        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, session_dateInput, session_summaryInput],
+        [order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, order_dateInput, completedInput],
         (error, results, fields) => {
             if (error) {
                 console.error('Error creating order', error);
@@ -237,25 +237,23 @@ app.put('/therapy_orders/:id', (req, res) => {
         [associated_dxInput, order_idInput, pt_name_from_dropdown, therapist_name_from_dropdown],
         (error, results, fields) => {
             if (error) {
-                console.error('Error creating order', error);
-                restart.status(500).send('Error creating therapy order');
+                console.error('Error updating order', error);
+                restart.status(500).send('Error updating therapy order');
                 return;
             }
 
-            res.status(200).send('Therapy order created successfully');
+            res.status(200).send('Therapy order updated successfully');
         }
     );
 });
-//     )
-//         .then((results) => {
-//             res.status(200).send('Therapy order updated successfully');
-//         })
-//         .catch((error) => {
-//             console.error('Error updating therapy order', error);
-//             res.status(500).send('Error updating therapy order');
-//         });
-// });
-//delete a therapy order
+
+
+
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}...`);
+});
+
+
 app.delete('/therapy_orders/:id', (req, res) => {
     const order_idInput = req.params.id;
 

@@ -90,22 +90,22 @@ footer {
 
 tr td,
 td th {
-  font-size: 2rem;
-  font-weight: 100;
+  font-size: 1rem;
+  font-weight: 500;
   border: 1px solid;
   border-collapse: collapse;
   padding: 10px;
   background: white;
   box-sizing: border-box;
-  text-align: left;
+  text-align: middle;
 }
 
 th {
-  padding: 20px .625em;
+  padding: 0px .625em;
   height: 60px;
   vertical-align: middle;
   width: 120px;
-  font-size: 13px;
+  font-size: 20px;
 }
 
 input,

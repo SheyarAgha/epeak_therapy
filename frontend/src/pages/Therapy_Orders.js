@@ -4,6 +4,10 @@ import TableRow from "../components/TableRow";
 
 
 function TherapyOrders() {
+
+    const [data, setData] = useState([]);
+    const [order, setOrder] = useState([]);
+
     const [orders, setOrders] = useState([]);
     const [patient, setPatient] = useState('');
     const [patients, setPatients] = useState([]);
@@ -41,7 +45,7 @@ function TherapyOrders() {
     };
 
     const addRecord = async () => {
-        const newRecord = { order_id_from_dropdown, pt_name_from_dropdown, therapist_name_from_dropdown, order_dateInput, completedInput };
+        const newRecord = { patient, diagnosis, date, therapist, num };
         const response = await fetch("http://flip2.engr.oregonstate.edu:6573/therapy_orders", {
             method: 'POST',
             body: JSON.stringify(newRecord),
@@ -51,10 +55,10 @@ function TherapyOrders() {
         });
         if (response.status === 201) {
             alert("Successfully added the order");
+            loadTherapyOrders();
         } else {
             alert("Failed to add the order");
         }
-        navigate("/");
     };
 
     // const onDelete = async record => {
@@ -72,7 +76,7 @@ function TherapyOrders() {
             method: 'DELETE'
         });
         if (response.status === 204) {
-            setOrders(orders.filter(order => order.order_id !== record.order_id));
+            loadTherapyOrders();
         } else {
             console.error('Failed to delete order');
         }
@@ -93,10 +97,10 @@ function TherapyOrders() {
         });
         if (response.status === 202) {
             alert("Successfully updated the order record");
+            loadTherapyOrders();
         } else {
             alert("Failed to update the order record");
         }
-        navigate("/");
     };
 
     const loadTherapyOrders = async () => {
@@ -109,7 +113,7 @@ function TherapyOrders() {
         loadTherapyOrders();
         fetchTherapists();
         fetchPatients();
-        fetchOrders;
+        fetchOrders();
     }, []);
 
 
@@ -121,8 +125,8 @@ function TherapyOrders() {
                     <th>Order ID</th>
                     <th>Patient ID</th>
                     <th>Associated Dx</th>
-                    <th>Ordered Date</th>
                     <th>Therapist ID</th>
+                    <th>Ordered Date</th>
                     <th>Completed?</th>
                 </thead>
                 <tbody>
@@ -136,19 +140,19 @@ function TherapyOrders() {
             <div>
                 <h2>Add an Order</h2>
 
-                <select value={order} onChange={e => setOrder(e.target.value)}>
+                {/* <select value={order} onChange={e => setOrder(e.target.value)}>
                     <option value=''>Select Order</option>
                     {orders.map((order) => (
                         <option key={order.order_id} value={order.order_id}>
-                            {order.order_id}
+                            {order.order_}
                         </option>
                     ))}
-                </select>
+                </select> */}
                 <select value={patient} onChange={e => setPatient(e.target.value)}>
                     <option value=''>Select Patient</option>
                     {patients.map((patient) => (
                         <option key={patient.pt_id} value={patient.pt_id}>
-                            {patient.pt_id}
+                            {patient.pt_name}
                         </option>
                     ))}
                 </select>
@@ -166,7 +170,7 @@ function TherapyOrders() {
                     <option value=''>Select Therapist</option>
                     {therapists.map((therapist) => (
                         <option key={therapist.therapist_id} value={therapist.therapist_id}>
-                            {dept.dept_name}
+                            {therapist.therapist_name}
                         </option>
                     ))}
                 </select>
@@ -190,14 +194,6 @@ function TherapyOrders() {
                         </option>
                     ))}
                 </select>
-                <select value={editpatient} onChange={e => editPatient(e.target.value)}>
-                    <option value=''>Select Patient</option>
-                    {patients.map((patient) => (
-                        <option key={patient.pt_id} value={patient.pt_id}>
-                            {patient.pt_id}
-                        </option>
-                    ))}
-                </select>
                 <input
                     type="text"
                     placeholder="Enter diagnosis"
@@ -212,15 +208,15 @@ function TherapyOrders() {
                     <option value=''>Select Therapist</option>
                     {therapists.map((therapist) => (
                         <option key={therapist.therapist_id} value={therapist.therapist_id}>
-                            {dept.dept_name}
+                            {therapist.therapist_name}
                         </option>
                     ))}
                 </select>
                 <input
-                    type="number"
+                    type="text"
                     placeholder="Enter 0 for yes, 1 for no"
-                    value={editnum}
-                    onChange={e => editNum(e.target.value)} />
+                    value={editcompletion}
+                    onChange={e => editCompletion(e.target.value)} />
                 <button
                     onClick={onEdit}
                 >Update Order</button>

@@ -19,7 +19,7 @@ function Patients() {
         const response = await fetch(`http://flip2.engr.oregonstate.edu:6573/patients/${record.pt_id}`,
             { method: 'DELETE' });
         if (response.status === 204) {
-            setData(data.filter(e => e.pt_id != record.pt_id));
+            loadPatients();
         } else {
             console.error('Failed');
         }
@@ -36,10 +36,10 @@ function Patients() {
         });
         if (response.status === 202) {
             alert("Successfully updated the patient record");
+            loadPatients();
         } else {
             alert("Failed to update the patient record");
         }
-        navigate("/");
     };
 
     const fillEdit = (record) => {
@@ -73,10 +73,10 @@ function Patients() {
         });
         if (response.status === 201) {
             alert("Successfully added the patient");
+            loadPatients();
         } else {
             alert("Failed to add the patient");
         }
-        navigate("/");
     };
 
     const loadPatients = async () => {

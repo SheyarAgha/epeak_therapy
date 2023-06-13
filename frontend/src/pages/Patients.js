@@ -42,6 +42,14 @@ function Patients() {
         navigate("/");
     };
 
+    const fillEdit = (record) => {
+        editName(record.pt_name)
+        editDate(record.date_of_birth)
+        editGender(record.gender)
+        editEmail(record.email)
+        editNum(record.phone_number)
+    };
+
     const [name, setName] = useState('');
     const [date, setDate] = useState('');
     const [gender, setGender] = useState('');
@@ -96,7 +104,7 @@ function Patients() {
                 <tbody>
                     {data.map((record) => <TableRow
                         record={record}
-                        onEdit={onEdit}
+                        fillEdit={fillEdit}
                         onDelete={onDelete} />)}
                 </tbody>
             </table>

@@ -37,10 +37,90 @@
   }
 } */
 
+
+
+/* Citation for some bits and peices of code throughout:
+Date: 06/12/2023
+Adapted from and Based on previous work done by Maricon Valdez(self)
+in CS290 */
+
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
+body {
+  background: #F9B9B7;
+  color: #0d3b66;
+  font: 14px 'Quicksand';
+  padding: 10px;
+}
+
+h1 {
+  color: #0d3b66;
+  font-weight: 100;
+  font-size: 3rem;
+}
+
+h2,
+h4 {
+  color: #0d3b66;
+  font-weight: 100;
+  font-size: 3 rem;
+}
+
+header,
+main,
+article,
+footer {
+  background-color: #98c1d9;
+  color: #284b63;
+  padding-top: 2px;
+  border: 2px solid;
+  font-size: 25px;
+  margin-right: 3px;
+}
+
+.App-Nav {
+  color: #0091aa;
+  font-size: 1.6 rem;
+  font-weight: 400;
+}
+
+.App-Nav .Link:hover {
+  color: white;
+}
+
+tr td,
+td th {
+  font-size: 2rem;
+  font-weight: 100;
+  border: 1px solid;
+  border-collapse: collapse;
+  padding: 10px;
+  background: white;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+th {
+  padding: 20px .625em;
+  height: 60px;
+  vertical-align: middle;
+  width: 120px;
+  font-size: 13px;
+}
+
+input,
+textarea,
+select,
+button {
+  background: white;
+  color: #0d3b66;
+  font: 400 34px;
+  padding: 10px;
+}
+
+
 /* base styles */
-* {
+/* * {
   margin: 0;
   font-family: "Quicksand";
   color: #333;
@@ -74,7 +154,7 @@
 }
 
 /* blog previews / list */
-.blog-preview {
+/* .blog-preview {
   padding: 10px 16px;
   margin: 20px 0;
   border-bottom: 1px solid #fafafa;
@@ -86,4 +166,4 @@
   font-size: 20px;
   color: #f1356d;
   margin-bottom: 8px;
-}
+} */
